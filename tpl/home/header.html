@@ -1,0 +1,73 @@
+{config_load file='set.conf'}
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>{$pagetitle|default:''}-{$smarty.config.site_name}</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="keywords" content="{$smarty.config.site_keywords}">
+  <meta name="description" content="{$smarty.config.site_description}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="stylesheet" href="Public/assets/css/amazeui.min.css"/>
+  <script src="Public/assets/js/gwc.js"></script>
+  <!--[if lt IE 9]>
+  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+  <script src="Public/assets/js/amazeui.ie8polyfill.min.js"></script>
+  <![endif]-->
+  <!--[if (gte IE 9)|!(IE)]><!-->
+  <script src="Public/assets/js/jquery.min.js"></script>
+  <!--<![endif]-->
+  <script src="Public/assets/js/amazeui.min.js"></script>
+</head>
+<body>
+<header data-am-widget="header" class="am-topbar am-topbar-fixed-top">
+  <div class="am-container">
+    <h1 class="am-topbar-brand">
+      <a href="index.php">{$smarty.config.site_name}</a>
+    </h1>
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-offcanvas="{ target: '#doc-oc-demo2', effect: 'push'}">
+      <span class="am-sr-only">导航切换</span> 
+      <span class="am-icon-bars"></span>
+    </button>
+    <div class="am-collapse am-topbar-collapse" id="collapse-head">
+      <ul class="am-nav am-nav-pills am-topbar-nav">
+        <li><a href="index.php">首页</a></li>
+        <li><a href="index.php?c=index&m=messagelist">公告</a></li>
+        <li><a href="index.php?c=index&m=map">地图</a></li>
+      </ul>
+      {if $uid eq NULL}
+        <div class="am-topbar-right">
+        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm"  data-am-modal="{ target:'#doc-modal-register' }"><span class="am-icon-pencil"></span> 注册</button>
+      </div>
+      <div class="am-topbar-right">
+        <button class="am-btn am-btn-primary am-topbar-btn am-btn-sm"  data-am-modal="{ target:'#doc-modal-login' }"><span class="am-icon-user"></span> 登录</button>
+      </div>
+      {else}
+      <div class="am-topbar-right">
+        <a class="am-btn am-btn-primary am-topbar-btn am-btn-sm" href="index.php?c=index&m=logout"><span class="am-icon-user"></span> 退出</a>
+      </div>
+        <div class="am-topbar-right">
+        <a class="am-btn am-btn-secondary am-topbar-btn am-btn-sm"  href="index.php?c=user&m=index"><span class="am-icon-pencil"></span> 用户中心</a>
+      </div>
+      {/if}
+    </div>
+  </div>
+</header>
+<!--轮播图片-->
+<div class="sliderwidth">
+{if $slide neq ""}
+<div data-am-widget="slider" class="am-slider am-slider-a1">
+  <ul class="am-slides huandeng" style="overflow:hidden">
+  {foreach item=s from=$slide}
+  <li>
+  <a href="{$s.url}" style="background-image:url(./Public/Uploads/Slide/{$s.imgurl});background-position:50%;width:100%;display:block;height:250px;"></a>
+  </li>
+  {/foreach}
+  </ul>
+</div>
+{/if}
+</div>
+<hr>

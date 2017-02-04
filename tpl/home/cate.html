@@ -1,0 +1,36 @@
+<!--侧边栏-->
+<div class="am-u-md-2 am-hide-sm-only" id="cate">
+  <div class="am-panel-group"  data-am-sticky="{ top:50}" style="box-shadow: rgb(66, 152, 66) 0px 0px 5px;">
+    <section class="am-panel am-panel-default">
+      <div class="am-panel-hd">商品分类</div>
+      <ul class="am-list">
+      {if $cate neq ""}
+      {foreach item=c from=$cate}
+        <li><a href="index.php?c=index&m=goodcate&gid={$c.cid}">{$c.name}</a></li>
+      {/foreach}
+      {else}
+      当前没有任何分类
+      {/if}
+      </ul>
+    </section>
+  </div>
+</div>
+<!--侧边栏-->
+
+<!-- 侧边栏内容手机版 -->
+<div id="doc-oc-demo2" class="am-offcanvas">
+  <div class="am-offcanvas-bar">
+     <section class="am-panel am-panel-default">
+      <div class="am-panel-hd">商品分类</div>
+      <ul class="am-list">
+      {if $cate neq ""}
+      {foreach item=c from=$cate}
+        <li><a href="index.php?c=index&m=goodcate&gid={$c.cid}">{$c.name}</a></li>
+      {/foreach}
+      {else}
+      当前没有任何分类
+      {/if}
+      </ul>
+    </section>
+  </div>
+</div>

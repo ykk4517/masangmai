@@ -1,0 +1,60 @@
+{include file="tpl/admin/header.html"}
+  <div class="admin-content">
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">店内公告</strong></div>
+    </div>
+	<div class="am-g">
+      <div class="am-u-md-6 am-cf">
+        <div class="am-fl am-cf">
+          <div class="am-btn-toolbar am-fl">
+            <div class="am-btn-group am-btn-group-xs">
+              <a type="button" class="am-btn am-btn-default"  href="admin.php?c=message&m=messageadd"><span class="am-icon-plus"></span> 新增</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="am-g">
+      <div class="am-u-sm-12">
+      {if $message neq ""}
+        <form class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-title">标题</th><th>发布日期</th><th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody>
+		      {foreach item=m from=$message}
+            <tr>
+              <td><a href="index.php?c=index&m=good&gid={$m.id}" target="_blank">{$m.title}</a></td>
+              <td>{$m.time|date_format:"%Y-%m-%e,%H:%M:%S"}</td>
+              <td>
+                <div class="am-btn-toolbar">
+                  <div class="am-btn-group am-btn-group-xs">
+                    <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="admin.php?c=message&m=messageadd&id={$m.id}"><span class="am-icon-pencil-square-o"></span> 编辑</a>
+                    <a class="am-btn am-btn-default am-btn-xs am-text-danger" href="admin.php?c=message&m=delmessage&id={$m.id}"><span class="am-icon-trash-o"></span> 删除</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+			  {/foreach}
+          </tbody>
+        </table>
+        </form>
+        <div class="am-cf">
+          <div class="am-fr">
+            <ul class="am-pagination">
+                {$page}
+            </ul>
+          </div>
+        </div>
+        {else}
+        <hr />
+        <p>注：当前没有公告</p>
+        {/if}
+      </div>
+    </div>
+  </div>
+</div>
+{include file="tpl/admin/footer.html"}

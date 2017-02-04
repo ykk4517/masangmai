@@ -1,0 +1,161 @@
+{include file="tpl/admin/header.html"}
+<script type="text/javascript">
+goodsflag = 0;
+function selectAll() //全选 
+{ 
+  var objs = document.getElementsByName('delorders'); 
+  var i; 
+  if(goodsflag == 0){
+    for(i = 0; i < objs.length; i++) 
+    { 
+      if(objs[i].type == "checkbox") 
+      { 
+        objs[i].checked = true; 
+      } 
+    }
+  }else{
+    for(i = 0; i < objs.length; i++) 
+    { 
+      if(objs[i].type == "checkbox") 
+      { 
+        objs[i].checked = false; 
+      } 
+    }
+  } 
+  goodsflag = (goodsflag+1)%2;
+} 
+function changeValue(){
+  var objs = document.getElementsByName('delorders'); 
+  var delg = document.getElementById('delg'); 
+  var i,str=''; 
+  for(i = 0; i < objs.length; i++) 
+  { 
+    if(objs[i].type == "checkbox") 
+    { 
+      if(objs[i].checked == true){
+        str += objs[i].value+",";
+      }
+    } 
+  }
+  //alert(str);
+    delg.value = str;
+    $("form[name=delall]").submit();
+  }
+</script>
+  <div class="admin-content">
+    <div class="am-cf am-padding">
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">订单列表</strong></div>
+    </div>
+    <div class="am-g">
+      <div class="am-u-sm-12">
+      {if $order neq ""}
+        <form action="admin.php?c=order&m=delallorder" method="post" name="delall" class="am-form">
+          <table class="am-table am-table-striped am-table-hover table-main">
+            <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" onclick="selectAll();"/></th><input type="hidden" id="delg" name="delg"/>
+                <th class="table-id">收货人</th>
+                <th class="table-title">电话</th>
+                <th class="table-type">地址</th>
+                <th class="table-author">金额</th>
+                <th class="table-date am-hide-sm-only">备注</th>
+                <th class="table-date am-hide-sm-only">订单ID</th>
+                <th class="table-date am-hide-sm-only">下单日期</th>
+                <th class="table-date am-hide-sm-only">状态</th>
+                <th class="table-set">操作</th>
+              </tr>
+          </thead>
+          <tbody>
+          {foreach item=o from=$order}
+            <tr>
+              <td><input type="checkbox" name="delorders" value="{$o.order_no}"/></td>
+              <td>{$o.name}</td>
+              <td>{$o.tel}</td>
+              <td>{$o.address}</td>
+              <td style="color:#FF0000">{$o.totalAmount}</td>
+              <td class="am-hide-sm-only">{$o.remarks}</td>
+              <td class="am-hide-sm-only">{$o.order_no}</td>
+              <td class="am-hide-sm-only">{$o.time|date_format:"Y-m-d H:i:s"}</td>
+              <td class="am-hide-sm-only" id="{$o.order_no}">
+              {if $o.state eq 0}
+              <a class="am-badge am-badge-danger am-radius" onclick="change('{$o.order_no}','1');">未确认</a>
+              {else}
+              <a class="am-badge am-badge-success am-radius" onclick="change('{$o.order_no}','0');">已确认</a>
+              {/if}
+              </td>
+              <td>
+                <div class="am-btn-toolbar">
+                <div class="am-btn-group am-btn-group-xs">
+                <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="javascript:void(0);" onclick="order({$o.order_no})"><span class="am-icon-eye"></span> 查看</a>
+                <a class="am-btn am-btn-default am-btn-xs am-text-danger" href="admin.php?c=order&m=delorder&order_no={$o.order_no}" onClick="if(confirm('删除订单,是否继续执行?')==false)return false;"><span class="am-icon-trash-o"></span> 删除</a>
+                </div>
+                </div>
+              </td>
+            </tr>
+            {/foreach}
+          </tbody>
+        </table>
+        <a  class="am-btn am-btn-default am-btn-xs am-text-danger" onClick="if(confirm('删除选中商品,是否继续执行?')==false){ return false;}else{ changeValue();}"><span class="am-icon-trash-o"></span> 删除选中商品</a>
+        </form>
+        <div class="am-cf">
+          <div class="am-fr">
+            <ul class="am-pagination">
+                {$page}
+            </ul>
+          </div>
+        </div>
+      {else}
+      <hr />
+      <p>当前没有任何订单哦</p>
+      {/if}
+      </div>
+    </div>
+  </div>
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-order">
+  <div class="am-modal-dialog" style="-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0;border-radius:10px 10px 0 0;">
+    <div class="am-modal-hd" style="background:#0e90d2;-webkit-border-radius:10px 10px 0 0;-moz-border-radius:10px 10px 0 0;border-radius:10px 10px 0 0;">
+      <span id="no" style="color:white;padding: 10px 10px 5px;"></span>
+      <a href="javascript: void(0)" onclick="close_modal();" class="am-close am-close-spin" style="top:0px;right:16px;">&times;</a>
+    </div>
+    <div class="am-modal-bd">
+       <table id="order_good" class="am-table am-table-striped am-table-hover table-main" style="display:block;max-height:300px; overflow-y:scroll;">
+       </table>
+       <div id="loading" style="text-align:center;padding:20px 10px;"><i class="am-icon-spinner am-icon-spin"></i></div>
+    </div>
+  </div>
+</div>
+<script>
+function order(order_no){
+   $('#order_good').html('');
+   $('#loading').show();
+   $('#no').html("单号："+order_no);
+   $('#doc-modal-order').modal('open');
+   $.get("admin.php?c=order&m=getorder", { "order_no": order_no },
+     function(data){
+    var str='<thead><tr><th style="padding:6px;text-align:center;" width="60%" class="table-title">名称</th><th style="padding:6px;text-align:center;" width="22%" class="table-title">价格</th><th style="padding:6px;text-align:center;" class="table-title">数量</th></tr></thead><tbody >';
+    for(var i=0;i<data.length;i++){
+      str+='<tr><td width="60%">'+data[i].name+'</td><td>'+data[i].price+'</a></td><td>'+data[i].num+'</td></tr>'; 
+    }
+    str+='</tbody>';
+    setTimeout(function(){
+    $('#loading').hide();
+        $('#order_good').html(str);
+        },500); 
+   }, "json");    
+}
+function close_modal(){
+    $('#order_good').html('');
+    $('#doc-modal-order').modal('close');
+}
+function change(order_no,state){
+   $.post("admin.php?c=order&m=changeorder", { "order_no": order_no,"state":state},
+     function(data){
+      if(state==1){
+         $('#'+order_no).html("<a class=\"am-badge am-badge-success am-radius\" onclick=\"change('"+order_no+"','0');\">已确认</a>"); 
+      }else{
+         $('#'+order_no).html("<a class=\"am-badge am-badge-danger am-radius\" onclick=\"change('"+order_no+"','1');\">未确认</a>"); 
+      }
+   }, "json");    
+}
+</script>
+{include file="tpl/admin/footer.html"}

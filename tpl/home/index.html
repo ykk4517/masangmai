@@ -1,0 +1,39 @@
+{include file="tpl/home/header.html" pagetitle='首页'}
+<div class="am-g">
+{include file="tpl/home/cate.html"}
+
+<div class="am-u-md-8 am-g-fixed">
+<ul data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-bordered"> 
+{if $good neq ""}
+{foreach item=g from=$good}
+<li> 
+  <div class="am-gallery-item good_infor">
+    <a href="index.php?c=index&m=good&gid={$g.gid}">
+    <div class="good_img">
+      <img src="./Public/Uploads/Good/{$g.img}" alt="{$g.name}" id="img_{$g.img}"/>
+    </div>
+    </a>
+    <div class="am-gallery-desc">
+      <div style="padding:0 10px;">
+        <h3 class="am-gallery-title"><strong>{$g.name}</strong></h3>
+        <div style="overflow:hidden;margin-bottom:10px;">
+          <span class="am-u-sm-5" style="padding:0;">¥{$g.price}</span>
+          <span class="am-u-sm-7" style="padding:0; text-align:right;padding-right:10px;">
+          <span style="font-size:12px; color:#888888;">销售:&nbsp;&nbsp;</span>{$g.base_num}
+          </span>
+        </div>
+      </div>
+      <a href="javascript:void(0);" class="am-btn am-btn-primary" onclick="addCart('{$g.gid}','{$g.name}','{$g.price}');" style="width:100%">加入购物车</a>
+    </div>
+  </div>
+</li>
+{/foreach}
+{else}
+还没有商品哦
+{/if}
+</ul>
+</div>
+
+{include file="tpl/home/gwc.html"}
+</div>
+{include file="tpl/home/footer.html"}

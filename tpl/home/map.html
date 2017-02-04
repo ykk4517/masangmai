@@ -1,0 +1,17 @@
+{include file="tpl/home/header.html" pagetitle='店铺地址'}
+<div class="am-g">
+{include file="tpl/home/cate.html"}
+
+
+{config_load file='set.conf'}
+<div class="am-u-md-8 am-g-fixed">
+<div data-am-widget="map" class="am-map am-map-default" data-name="{$smarty.config.site_name}"
+data-address="{$smarty.config.site_address}" data-longitude="{$smarty.config.site_mapl}" data-latitude="{$smarty.config.site_mapr}" data-scaleControl="true" data-zoomControl="true" data-setZoom="14" data-icon="http://amuituku.qiniudn.com/mapicon.png">
+<div id="bd-map"></div>
+</div>
+</div>
+
+
+{include file="tpl/home/gwc.html"}
+</div>
+{include file="tpl/home/footer.html"}

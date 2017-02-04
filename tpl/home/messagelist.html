@@ -1,0 +1,23 @@
+{include file="tpl/home/header.html" pagetitle='店铺公告'}
+<div class="am-g am-lg-fixed">
+  <div class="am-u-lg-8 am-u-lg-centered" style="padding:0">
+	<h1 class="title-hide" style="color:#009f3c; text-align:center; border-bottom: solid #009f3c 3px;">店内公告</h1>
+    <article class="blog-main">
+    	{if $message neq ""}
+		<ul class="am-list am-list-static">
+		  {foreach item=m from=$message}
+		     <li><a href="index.php?c=index&m=message&id={$m.id}" style="width:100%;">{$m.title}&nbsp;&nbsp;
+		     <span style="float:right;color:#999999; font-weight:normal;margin-right:10px;">{$m.time|date_format:"%Y-%m-%e,%H:%M:%S"}</span>
+		     </a></li>
+		  {/foreach}
+		</ul>
+		<ul class="am-pagination blog-pagination" style="text-align: right;">
+		  {$page}
+		</ul>
+		{else}
+		<ul>当前没有文章</ul>
+		{/if}
+   </article>
+   </div>
+</div>
+{include file="tpl/home/footer.html"}

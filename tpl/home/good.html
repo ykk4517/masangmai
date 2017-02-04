@@ -1,0 +1,36 @@
+{include file="tpl/home/header.html" pagetitle=$name}
+<div class="am-g">
+{include file="tpl/home/cate.html"}
+  <div class="am-u-md-8 am-g-fixed">
+    <div class="am-u-md-12">
+      <div class="am-u-lg-5">
+        <p><img src="./Public/Uploads/Good/{$img}" id="img_{$gid}" width="100%" style="box-shadow: 0px 0px 8px #429842;"/></p>
+      </div>
+      <div class="am-u-lg-5">
+        <h5><a href="#">{$name}</a></h5>
+        <div style="border-bottom: dotted #cccccc 1px;border-top:dotted #cccccc 1px;">
+          <div class="am-u-sm-5"><span class="pd_product-price-yen">价格:&nbsp;&nbsp;</span></div>:
+          <div class="am-u-sm-5">¥&nbsp;&nbsp;<strong class="pd_product-price-num" style="color:red;">{$price}</strong></div>
+        </div>
+        <br>
+        <div style="border-bottom: dotted #cccccc 1px;border-top:dotted #cccccc 1px;">
+          <div class="am-u-sm-5">销售:&nbsp;&nbsp;<span style="color:red;">{$base_num}</span></div>;
+        </div>
+        <br>
+        <div>
+          <div class="am-u-sm-5"><a href="javascript:void(0);" class="am-btn am-btn-primary" onclick="addCart('{$gid}','{$name}','{$price}');">加入购物车</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="am-u-lg-12">
+    <div data-am-widget="titlebar" class="am-titlebar am-titlebar-default" style="margin:0; margin-bottom:10px; margin-top:20px;">
+      <h2 class="am-titlebar-title" style="border-bottom:solid #0e90d2 1px; width:100%;">图文详情</h2>
+    </div>
+    </div>
+    <div class="am-u-lg-12">
+        {$infor}
+    </div>
+  </div>
+{include file="tpl/home/gwc.html"}
+</div>
+{include file="tpl/home/footer.html"}

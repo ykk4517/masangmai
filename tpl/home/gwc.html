@@ -1,0 +1,25 @@
+{config_load file='set.conf'}
+<!--侧边栏-->
+<div class="am-u-md-2 am-hide-sm-only">
+  <div class="am-panel-group"  data-am-sticky="{ top:50}" style="box-shadow: rgb(66, 152, 66) 0px 0px 5px;">
+    {if $smarty.config.site_notice neq ""}
+    <section class="am-panel am-panel-default">
+      <div class="am-panel-hd">店铺公告</div>
+      <div class="am-panel-bd">
+        <p>{$smarty.config.site_notice}</p>   
+      </div>
+    </section>
+    {/if}
+    <section class="am-panel am-panel-default">
+        <div class="am-panel-hd"><span class="am-icon-shopping-cart"></span>&nbsp;&nbsp;购物车<span class="am-badge am-badge-warning am-round Allcount" style="position: absolute;">0</span></div>
+          <ul id="cart" class="am-list" style="max-height:346px; overflow:auto;margin-bottom:0px;">
+
+          </ul>
+          <div style="width:100%;overflow:hidden;">
+            <a class="am-btn am-btn-warning am-btn-sm am-u-sm-6" href="javascript:void(0);" id="delcart">全清空</a>
+            <a class="am-btn am-btn-success am-btn-sm am-u-sm-6" id="goforcart" href="javascript:void(0);" data-am-modal="{ target: '#doc-modal-account' }">去结算</a>
+          </div>
+    </section>
+  </div>
+</div>
+<!--侧边栏-->

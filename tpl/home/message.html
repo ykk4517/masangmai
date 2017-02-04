@@ -1,0 +1,22 @@
+{include file="tpl/home/header.html" pagetitle=$title}
+<div class="am-g">
+{include file="tpl/home/cate.html"}
+
+<div class="am-u-md-8 am-g-fixed">
+  <div class="am-u-lg-8 am-u-lg-centered">
+    <article class="blog-main">
+	  <h3 class="am-article-title"><a href="#">{$title}</a></h3>
+  	<h4 class="am-article-meta">
+  		发布时间：{$time|date_format:"%Y-%m-%e,%H:%M:%S"}
+    </h4>
+    <div class="am-g blog-content">
+      {$content}
+	  </div>
+   </article>
+   </div>
+</div>
+
+
+{include file="tpl/home/gwc.html"}
+</div>
+{include file="tpl/home/footer.html"}

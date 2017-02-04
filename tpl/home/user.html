@@ -1,0 +1,228 @@
+{include file="tpl/home/header.html" pagetitle='用户中心'}
+<hr>
+<div class="am-g am-g-fixed blog-g-fixed">
+  <div class="am-u-md-8" style="border-color: #ddd; margin-bottom:0;">
+	<div class="am-panel-hd"  style="color:#0e90d2;background-color: #f5f5f5;border-color: #ddd;">
+	<strong>我的订单</strong>
+	</div>
+	{if $order eq ""}
+	<article class="blog-main">
+		<table class="am-table am-table-bordered" style="border: 1px solid #ddd;margin-bottom:0;">
+		<tr>
+			<th scope="row" width="60px" style="text-align:center;border-top:2px solid #0e90d2;border-left: 0px;">还没有订单呢</th>
+		</tr>
+		</table>
+	</article>
+	{else}
+  	{foreach item=o from=$order}
+    <article class="blog-main">
+		<table class="am-table am-table-bordered" style="border: 1px solid #ddd;margin-bottom:0;">
+		<tr>
+			<th scope="row" width="60px" style="text-align:center;border-top:2px solid #0e90d2;border-left: 0px;">单号</th>
+			<td style="border-top:2px solid #0e90d2;">{$o.order_no}</td>
+			<th scope="row" width="60px" style="text-align:center;border-top:2px solid #0e90d2;">状态</th>
+			<td style="border-top:2px solid #0e90d2;">
+			{if $o.state eq 0}
+				<span class="am-badge am-badge-danger am-radius">未确认</span>
+			{else}
+				<span class="am-badge am-badge-success am-radius">已确认</span>
+			{/if}
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align:center;border-left: 0px;">金额</th>
+			<td>{$o.totalAmount}</td>
+			<th style="text-align:center;">时间</th>
+			<td>{$o.time|date_format:"%Y-%m-%e,%H:%M:%S"}</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align:center;border-left: 0px;">备注</th>
+			<td colspan="3">{$o.remarks}</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align:center;border-left: 0px;">操作</th>
+			<td colspan="3">
+				<div class="am-btn-toolbar" style="float:right">
+					<div class="am-btn-group am-btn-group-xs">
+						<a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="javascript:void(0);" onClick="order({$o.order_no})"><span class="am-icon-eye"></span> 查看</a>
+						{if $o.state eq 0}
+						<a class="am-btn am-btn-default am-btn-xs am-text-danger" href="index.php?c=user&m=delorder&order_no={$o.order_no}" onClick="if(confirm('删除订单,是否继续执行?')==false)return false;"><span class="am-icon-trash-o"></span> 删除</a>
+						{/if}
+					</div>
+				</div>
+			</td>
+		</tr>
+		<form action="index.php?c=user&m=comment" method="post">
+		<input type="hidden" name="order_id" value="{$o.order_no}"/>
+		{if $o.state eq 1}
+		<tr>
+			<th scope="row" style="text-align:center;border-left: 0px;">评论</th>
+			<td colspan="3">
+				<div class="goods-comm">
+					<div class="goods-comm-stars" style="width:100%; overflow:hidden;">
+						<div class="star_l">满意度：
+							{if $o.content eq ""}
+							<select name="serve_star" id="serve_star">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
+							{else}
+							<img src="Public/assets/i/{$o.serve_star}.png" />
+							{/if}
+						    <input type="hidden" name="uid" value="{$uid}"/>
+						</div>
+					</div>
+				</div>
+				{if $o.content neq ""}
+				{$o.content}
+				{else}
+				<textarea style="width:100%;padding:10px; font-size:12px;" placeholder="请输入您的评论" name="content"  ></textarea>
+				<button style="margin-top:6px;" class="am-btn am-btn-primary am-btn-sm" type="button" onclick="commentcheck(this.form)">提交评论</button>
+				{/if}
+			</td>
+		</tr>
+		{/if}
+		</form>
+		</table>
+	</article>
+	{/foreach}
+	{/if}
+ </div>
+<!--侧边栏-->
+<div class="am-u-md-4 blog-sidebar">
+  <div class="am-panel-group">
+    <section class="am-panel am-panel-default">
+      <div class="am-panel-hd"><span class="am-icon-shopping-cart"></span>&nbsp;&nbsp;购物车<span class="am-badge am-badge-warning am-round Allcount" style="position: absolute;">0</span></div>
+      <div class="am-panel-bd">
+        <ul class="am-list blog-list" id="cart" style="max-height:346px; overflow:auto;margin-bottom:0px;">
+
+        </ul>
+        <a class="am-btn am-btn-warning am-btn-sm" href="javascript:void(0);" id="delcart">全清空</a>
+        <a class="am-btn am-btn-success am-btn-sm" href="javascript:void(0);"  id="goforcart" data-am-modal="{ target: '#doc-modal-account'}">去结算</a>
+      </div>
+    </section>
+    <section class="am-panel am-panel-default">
+      <div class="am-panel-hd" style="color:#0e90d2;background-color: #f5f5f5;border-color: #ddd;"><strong>收货信息</strong></div>
+		  <div class="am-panel-bd" style="padding-top: 10px;">
+			   <form class="am-form am-form-horizontal" action="index.php?c=user&m=useradddata&uid={$uid}" method="post" id="edform" data-am-validator>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">姓名</label>
+					<div class="am-u-sm-10">
+					  <input type="text" minlength="2" name="name" value="{$name}" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">地址</label>
+					<div class="am-u-sm-10">
+					  <input type="text" name="address" value="{$address}" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">邮箱</label>
+					<div class="am-u-sm-10">
+					  <input type="email" name="email" value="{$email}" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+				    <label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">&nbsp;</label>
+					<div class="am-u-sm-10">
+					  <input type="submit" class="am-btn am-btn-primary" value="保存修改" style="width: 100%;">
+					</div>
+				  </div>
+				</form>
+		  </div>
+    </section>
+    <section class="am-panel am-panel-default">
+      <div class="am-panel-hd am-cf" style="color: #444;background-color: #f5f5f5;border-color: #ddd;" data-am-collapse="{ target: '#collapse-panel-1'}">
+      <strong style="color:#0e90d2;">修改密码</strong>
+      <span class="am-icon-chevron-down am-fr"></span>
+      </div>
+          <div id="collapse-panel-1" class="am-collapse">
+            <form class="am-form am-form-horizontal" action="index.php?c=user&m=updatepassword&uid={$uid}" method="post" id="pdform" data-am-validator>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">原密码</label>
+					<div class="am-u-sm-10">
+					  <input type="text" name="lastpassword" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">新密码</label>
+					<div class="am-u-sm-10">
+					  <input type="password" id="pwd1" minlength="6" name="password" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+					<label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">新密码</label>
+					<div class="am-u-sm-10">
+					  <input type="password" minlength="6" data-equal-to="#pwd1" name="repassword" required>
+					</div>
+				  </div>
+				  <div class="am-form-group">
+				    <label class="am-u-sm-2 am-form-label" style="padding: 8px 0;text-align: center;">&nbsp;</label>
+					<div class="am-u-sm-10">
+					  <input type="submit" class="am-btn am-btn-primary"  value="保存修改" style="width: 100%;">
+					</div>
+				  </div>
+				</form>
+          </div>
+    </section>
+  </div>
+</div>
+<!--侧边栏-->
+</div>
+<!--订单详情-->
+<div class="am-u-sm-11 am-u-md-8 am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-order" style="display:none;margin-top:-200px !important;-webkit-border-radius: 10px;-moz-border-radius: 10px;border-radius: 10px; overflow:hidden;">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd" style="background:#0e90d2;-webkit-border-radius: 10px 10px 0 0;-moz-border-radius:  10px 10px 0 0;border-radius:  10px 10px 0 0;">
+      <span id="no" style="color:white;padding: 10px 10px 5px;"></span>
+      <a href="javascript: void(0)" onclick="close_modal();" class="am-close am-close-spin" style="top:0px;right:16px;">&times;</a>
+    </div>
+    <div class="am-modal-bd">
+       <table id="order_good" class="am-table am-table-striped am-table-hover table-main" style="display:block;max-height:300px; overflow-y:scroll;font-size:12px;">
+       </table>
+       <div id="loading" style="text-align:center;padding:20px 10px;"><i class="am-icon-spinner am-icon-spin"></i></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+function commentcheck(form){
+  if(form.serve_star.value == ''){
+     alert("请选择评分");
+	 return
+  }
+  if(form.content.value==""){
+     alert("请输入评价内容");
+	 form.content.focus();
+	 return
+  }
+  form.submit();
+}
+</script>	
+<script>
+function order(order_no){
+   $('#order_good').html('');
+   $('#loading').show();
+   $('#no').html("单号："+order_no);
+   $('#doc-modal-order').modal('open');
+   $.get("index.php?c=user&m=getorder", { "order_no": order_no },
+	   function(data){
+		var str='<thead><tr><th style="padding:6px;text-align:center;" width="60%" class="table-title">名称</th><th style="padding:6px;text-align:center;" width="22%" class="table-title">价格</th><th style="padding:6px;text-align:center;" class="table-title">数量</th></tr></thead><tbody >';
+		for(var i=0;i<data.length;i++){
+			str+='<tr><td width="60%">'+data[i].name+'</td><td>'+data[i].price+'</a></td><td>'+data[i].num+'</td></tr>'; 
+		}
+		str+='</tbody>';
+		setTimeout(function(){
+		$('#loading').hide();
+        $('#order_good').html(str);
+        },500);
+   }, "json");	  
+}
+function close_modal(){
+	  $('#order_good').html('');
+	  $('#doc-modal-order').modal('close');
+}
+</script>
+{include file="tpl/home/footer.html"}
